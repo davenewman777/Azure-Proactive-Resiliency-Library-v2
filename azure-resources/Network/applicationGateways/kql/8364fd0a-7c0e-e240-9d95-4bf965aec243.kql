@@ -10,6 +10,7 @@ resources
     | extend subnetid = tostring(properties_subnets.id)
     | extend addressprefix = tostring(properties_subnets.properties.addressPrefix)
     | project subnetid, addressprefix) on subnetid
-| where addressprefix !endswith '/24'
+| extend prefixLength = toint(split(addressprefix, "/")[1])
+| where prefixLength >= 24
 | project recommendationId = "8364fd0a-7c0e-e240-9d95-4bf965aec243", name, id, tags, param1 = strcat('AppGW subnet prefix: ', addressprefix)
 
